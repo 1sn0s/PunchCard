@@ -10,8 +10,8 @@ contract PunchCardNFT is DetailedERC721{
 
 	mapping(uint=>address) internal puchCardIdToOwner;
 	mapping(uint=>string) internal punchCardIdToMetaData;
-	mapping(address=>uint[]) internal ownerToTokensOwned;
-	mapping(uint[]=>address)
+	mapping(address=>uint[]) internal ownerToPunchCardsOwned;
+	mapping(uint=>uint) internal punchCardIdToOwnerArrayIndex;
 
 	event Transfer(address indexed _from, address indexed _to, uint256 _punchCardId);
 	event Approval(address indexed _owner, address indexed _requester, uint256 _punchCardId);
@@ -26,7 +26,7 @@ contract PunchCardNFT is DetailedERC721{
 	}
 
 	function balanceOf(address _owner) public view returns(uint256){
-		return ownerToTokensOwned[_owner].length;
+		return ownerToPunchCardsOwned[_owner].length;
 	}
 
 	function ownerOf(uint _tokenId) public view returns(address){
@@ -49,11 +49,39 @@ contract PunchCardNFT is DetailedERC721{
 	function transferFrom(address _from, address _to, uint _tokenId) public onlyExtantPunchCards(_tokenId){
 		require(getApproved(_tokenId) == msg.sender);
 		require(ownerof(_tokenId) == _from);
-		requrie(_to !== address(0));
+		require(_to !== address(0));
 
 		_clearApprovalAndTransfer(_from, _to, _tokenId);
 
 		Approval(_from, 0, _tokenId);
 		Transfer(_from, _to, _tokenId);
+	}
+
+	function transfer(address _to, uint _tokenId) public onlyExtantPunchCards(_tokenId){
+		require(ownerof(_tokenId) == msg.sender);
+		require(_to != address(0));
+
+
+	}
+
+	function _clearApprovalAndTransfer(address _from, address _to, uint _tokenId) internal{
+		_clearTokenApproval(_tokenId);
+		_removeTokenFromOwnersList(_from, _tokenId)
+	}
+
+	function _clearTokeApproval(uint _tokenId) internal{
+		punchCardIdToApprovedAddress[_tokenId] = address(0);
+	}
+
+	function _removeTokenFromOwnersList(address _owner, uint _tokenId) internal{
+		uint length = ownerToPunchCardsOwned[_owner].length;
+		uint index = punchCardIdToOwnerArrayIndex[_tokenId];
+		uint swapPunchCardId = ownerToPunchCardsOwned[_owner][length - 1];
+
+		ownerToPunchCardsOwned[_owner][index] = swapPunchCardId;
+		punchCardIdToOwnerArrayIndex[swapPunchCardId] = index;
+
+		delete ownerToPunchCardsOwned[_owner][length - 1];
+		ownerToPunchCardsOwned[_owner].length--;
 	}
 }
