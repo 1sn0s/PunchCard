@@ -61,15 +61,20 @@ contract PunchCardNFT is DetailedERC721{
 		require(ownerof(_tokenId) == msg.sender);
 		require(_to != address(0));
 
+		_clearApprovalAndTransfer(msg.sender, _to, _tokenId);
 
+		Approval(msg.sender, _to, _tokenId);
+		Transfer(msg.sender, _to, _tokenId);
 	}
 
 	function _clearApprovalAndTransfer(address _from, address _to, uint _tokenId) internal{
 		_clearTokenApproval(_tokenId);
-		_removeTokenFromOwnersList(_from, _tokenId)
+		_removeTokenFromOwnersList(_from, _tokenId);
+		_setTokenOwner(_tokenId, _to);
+		_addTokenToOwnersList(_to, _tokenId);
 	}
 
-	function _clearTokeApproval(uint _tokenId) internal{
+	function _clearTokenApproval(uint _tokenId) internal{
 		punchCardIdToApprovedAddress[_tokenId] = address(0);
 	}
 
@@ -83,5 +88,18 @@ contract PunchCardNFT is DetailedERC721{
 
 		delete ownerToPunchCardsOwned[_owner][length - 1];
 		ownerToPunchCardsOwned[_owner].length--;
+	}
+
+	function _setTokenOwner(uint _tokenId, address _to){
+		punchCardIdToOwner[_tokenId] = _to;
+	}
+
+	function _addTokenToOwnersList(address _owner,  uint _tokenId){
+		ownerToPunchCardsOwned[_owner].push(_tokenId);
+		punchCardIdToOwnerArrayIndex[_tokenId] = ownerToPunchCardsOwned.length - 1;
+	}
+
+	function _getApproved(uint _tokenId){
+		punchCardIdToApprovedAddress[_tokenId];
 	}
 }
