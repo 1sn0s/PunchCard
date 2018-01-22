@@ -12,6 +12,8 @@ contract PunchCardNFT is DetailedERC721{
 	mapping(uint=>string) internal punchCardIdToMetaData;
 	mapping(address=>uint[]) internal ownerToPunchCardsOwned;
 	mapping(uint=>uint) internal punchCardIdToOwnerArrayIndex;
+	mapping (uint=>address) internal punchCardIdToApprovedAddress;
+	
 
 	event Transfer(address indexed _from, address indexed _to, uint256 _punchCardId);
 	event Approval(address indexed _owner, address indexed _requester, uint256 _punchCardId);
@@ -67,6 +69,14 @@ contract PunchCardNFT is DetailedERC721{
 		Transfer(msg.sender, _to, _tokenId);
 	}
 
+	function getTokenOfOwnerByIndex(address _owner, uint _index) public view returns(uint _tokenId){
+		_getTokenOfOwnerByIndex(_owner, _index);
+	}
+
+	function _getTokenOfOwnerByIndex(address _owner, uint _index) private view returns(uint _tokenId){
+		return ownerToPunchCardsOwned[_index];
+	}	
+
 	function _clearApprovalAndTransfer(address _from, address _to, uint _tokenId) internal{
 		_clearTokenApproval(_tokenId);
 		_removeTokenFromOwnersList(_from, _tokenId);
@@ -94,12 +104,20 @@ contract PunchCardNFT is DetailedERC721{
 		punchCardIdToOwner[_tokenId] = _to;
 	}
 
-	function _addTokenToOwnersList(address _owner,  uint _tokenId){
+	function _addTokenToOwnersList(address _owner,  uint _tokenId) internal view{
 		ownerToPunchCardsOwned[_owner].push(_tokenId);
 		punchCardIdToOwnerArrayIndex[_tokenId] = ownerToPunchCardsOwned.length - 1;
 	}
 
-	function _getApproved(uint _tokenId){
+	function _getApproved(uint _tokenId) internal view{
 		punchCardIdToApprovedAddress[_tokenId];
+	}
+
+	function getOwnerTokens(address _owner) public view returns(uint[]){
+		ownerToPunchCardsOwned[_owner];
+	}
+
+	function _getOwnerTokens(address _owner) internal view returns(uint[]){
+		ownerToPunchCardsOwned[_owner];
 	}
 }
