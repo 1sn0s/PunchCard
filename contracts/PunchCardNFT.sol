@@ -14,15 +14,17 @@ contract PunchCardNFT is DetailedERC721{
 	mapping(uint=>uint) internal punchCardIdToOwnerArrayIndex;
 	mapping (uint=>address) internal punchCardIdToApprovedAddress;
 	
-
+	/* ERC721 events */
 	event Transfer(address indexed _from, address indexed _to, uint256 _punchCardId);
 	event Approval(address indexed _owner, address indexed _requester, uint256 _punchCardId);
 
+	//Only punch cards in existance
 	modifier onlyExtantPunchCards(uint _punchCardId){
 		require(ownerOf(_punchCardId) != address(0));
 		_;
 	}
 
+	/* ERC721 public functions */
 	function totalSupply() public view returns(uint256){
 		return  totalPunchCards;
 	}
@@ -44,10 +46,10 @@ contract PunchCardNFT is DetailedERC721{
 	}
 
 	function getApproved(uint _tokenId) public view returns(address _approved){
-		_getApproved(uint _tokenId);
+		return _getApproved(uint _tokenId);
 	}
 
-	//transfer the NFT _tokenId from _from to _to
+	/*transfer the NFT _tokenId from _from to _to*/
 	function transferFrom(address _from, address _to, uint _tokenId) public onlyExtantPunchCards(_tokenId){
 		require(getApproved(_tokenId) == msg.sender);
 		require(ownerof(_tokenId) == _from);
@@ -71,6 +73,19 @@ contract PunchCardNFT is DetailedERC721{
 
 	function getTokenOfOwnerByIndex(address _owner, uint _index) public view returns(uint _tokenId){
 		_getTokenOfOwnerByIndex(_owner, _index);
+	}
+
+	/*private functions*/
+	function _ownerOf(uint _tokenId) internal view returns(address){
+		return punchCardIdToOwner[_tokenId];
+	}
+
+	function _approve(address _to, uint _tokenId) internal{
+		punchCardIdToApprovedAddress[_tokenId] = _to;
+	}
+
+	function _getApproved(uint _tokenId) internal view returns(address){
+		return punchCardIdToApprovedAddress[_tokenId];
 	}
 
 	function _getTokenOfOwnerByIndex(address _owner, uint _index) private view returns(uint _tokenId){
@@ -109,15 +124,12 @@ contract PunchCardNFT is DetailedERC721{
 		punchCardIdToOwnerArrayIndex[_tokenId] = ownerToPunchCardsOwned.length - 1;
 	}
 
-	function _getApproved(uint _tokenId) internal view{
-		punchCardIdToApprovedAddress[_tokenId];
-	}
-
 	function getOwnerTokens(address _owner) public view returns(uint[]){
-		ownerToPunchCardsOwned[_owner];
+		return ownerToPunchCardsOwned[_owner];
 	}
 
 	function _getOwnerTokens(address _owner) internal view returns(uint[]){
-		ownerToPunchCardsOwned[_owner];
+		return ownerToPunchCardsOwned[_owner];
 	}
+
 }
