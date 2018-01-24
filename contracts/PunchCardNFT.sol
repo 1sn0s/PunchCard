@@ -3,8 +3,8 @@ pragma solidity 0.4.18;
 import "./DetailedERC721.sol";
 
 contract PunchCardNFT is DetailedERC721{
-	string public name;
-	string public symbol = 'PCNFT';
+	string public name 	= "PunchCardNFT";
+	string public symbol = "PCNFT";
 
 	uint public totalPunchCards;
 
@@ -71,6 +71,14 @@ contract PunchCardNFT is DetailedERC721{
 		Transfer(msg.sender, _to, _tokenId);
 	}
 
+	function name() public view returns(string){
+		return _getName();
+	}
+
+	function symbol() public view returns(string){
+		return _getSymbol();
+	}
+
 	function tokenOfOwnerByIndex(address _owner, uint _index) public view returns(uint _tokenId){
 		return _getTokenOfOwnerByIndex(_owner, _index);
 	}
@@ -130,6 +138,10 @@ contract PunchCardNFT is DetailedERC721{
 
 	function _getOwnerTokens(address _owner) internal view returns(uint[]){
 		return ownerToPunchCardsOwned[_owner];
+	}
+
+	function _getName() internal view returns(string){
+		return name;
 	}
 
 	function _getSymbol() internal view returns(string){

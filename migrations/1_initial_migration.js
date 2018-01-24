@@ -1,4 +1,4 @@
-var Migrations = artifacts.require("./Migrations.sol");
+var Migrations = artifacts.require("PunchCardNFT");
 
 module.exports = function(deployer) {
   deployer.deploy(Migrations);
