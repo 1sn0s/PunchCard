@@ -25,15 +25,15 @@ contract PunchCardNFT is DetailedERC721{
 	}
 
 	/* ERC721 public functions */
-	function totalSupply() public view returns(uint256){
+	function totalSupply() public view returns(uint256 _totalSupply){
 		return  totalPunchCards;
 	}
 
-	function balanceOf(address _owner) public view returns(uint256){
+	function balanceOf(address _owner) public view returns(uint256 _balance){
 		return ownerToPunchCardsOwned[_owner].length;
 	}
 
-	function ownerOf(uint _tokenId) public view returns(address){
+	function ownerOf(uint _tokenId) public view returns(address _owner){
 		return _ownerOf(_tokenId);
 	}
 

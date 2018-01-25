@@ -9,7 +9,7 @@ contract ERC721 {
     function getApproved(uint _tokenId) public view returns (address _approved);
     function transferFrom(address _from, address _to, uint _tokenId) public;
     function transfer(address _to, uint _tokenId) public;
-    function implementsERC721() public view returns (bool _implementsERC721);
+    //function implementsERC721() public view returns (bool _implementsERC721);
 
     // Events
     event Transfer(address indexed _from, address indexed _to, uint256 _tokenId);
